@@ -2,17 +2,21 @@ package agh.ics.oop;
 
 public class Animal {
 
-    public static final Vector2d MAP_BOTTOM = new Vector2d(0, 0);
-    public static final Vector2d MAP_TOP = new Vector2d(4, 4);
-    private Vector2d position = new Vector2d(2, 2);
+//    public static final Vector2d MAP_BOTTOM = new Vector2d(0, 0);
+//    public static final Vector2d MAP_TOP = new Vector2d(4, 4);
+    private static Vector2d DEFAULT_POSITION = new Vector2d(2, 2);
+    private IWorldMap map;
+    private Vector2d position;
     private MapDirection orientation = MapDirection.NORTH;
 
-    public void setPosition(Vector2d position) {
-        this.position = position;
+    public Animal(IWorldMap map) {
+        this(map, DEFAULT_POSITION);
     }
 
-    public void setOrientation(MapDirection orientation) {
-        this.orientation = orientation;
+    public Animal(IWorldMap map, Vector2d initialPosition) {
+        this.map = map;
+        this.position = initialPosition;
+        this.map.place(this);
     }
 
     public Vector2d getPosition() {
@@ -24,7 +28,8 @@ public class Animal {
     }
 
     public String toString() {
-        return "Animal position: " + position.toString() + " Animal orientation: " + orientation.toString();
+//        return "Animal position: " + position.toString() + " Animal orientation: " + orientation.toString();
+        return orientation.toString();
     }
 
     public boolean isAt(Vector2d position) {
@@ -34,7 +39,7 @@ public class Animal {
     public void move(MoveDirection direction) {
 
         Vector2d newPosition = null;
-        switch(direction) {
+        switch (direction) {
             case LEFT:
                 this.orientation = orientation.previous();
                 break;
@@ -48,8 +53,10 @@ public class Animal {
                 newPosition = this.position.subtract(this.orientation.toUnitVector());
                 break;
         }
-        if (newPosition!=null && newPosition.follows(MAP_BOTTOM) && newPosition.precedes(MAP_TOP)){
+        if (map.canMoveTo(newPosition)) {
+//        if (newPosition!=null && newPosition.follows(MAP_BOTTOM) && newPosition.precedes(MAP_TOP)){
             this.position = newPosition;
         }
     }
+
 }

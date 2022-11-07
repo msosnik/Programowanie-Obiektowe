@@ -6,19 +6,15 @@ public class World {
     public static void main(String[] args){
 
         System.out.println("System started");
-        Animal animal = new Animal();
-        System.out.println(animal.getPosition().toString());
-        for(MoveDirection direction : OptionsParser.parse(args)){
-            animal.move(direction);
-            System.out.println(animal.toString());
-        }
+        MoveDirection[] directions = new OptionsParser().parse(args);
+        IWorldMap map = new RectangularMap(10, 5);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+        IEngine engine = new SimulationEngine(directions, map, positions);
+        engine.run();
+        System.out.println(map.toString());
 
-        System.out.println(animal.toString());
         System.out.println("System finished");
 
-//        String[] animals = {"kot", "koń", "koza"};
-//        MoveDirection[] directions = stringsToDirections(args);
-//        run(directions, animals);
     }
     static void run(MoveDirection[] directions, String[] zwierzaki){
         for(MoveDirection direction: directions) {
