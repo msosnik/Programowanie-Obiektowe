@@ -84,15 +84,15 @@ public class Vector2dTest {
     }
 
     @Test
-    public void TestAdd() {
+    public void testAdd() {
         assertEquals(v00.add(v01), v01);
         assertEquals(v10.add(v01), v11);
-        assertEquals(v02.add(v11), new Vector2d(1, 1));
+        assertEquals(v02.add(v11), new Vector2d(1, 3));
         assertEquals(v00.add(vzero), v00);
     }
 
     @Test
-    public void TestSubtract() {
+    public void testSubtract() {
         assertEquals(v01.subtract(v00), v01);
         assertEquals(v00.subtract(v11), new Vector2d(-1, -1));
         assertEquals(v02.subtract(v11), new Vector2d(-1, 1));

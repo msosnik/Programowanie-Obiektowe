@@ -10,8 +10,8 @@ public class RectangularMapTest {
         IWorldMap map = new RectangularMap(5, 5);
         Animal animal1 = new Animal(map);
         assertNotNull(animal1);
-        assertEquals( map.place(new Animal(map)), false);
-        assertEquals(map.objectAt(animal1.getPosition()), animal1);
+        assertFalse( map.place(new Animal(map)));
+        assertEquals(animal1, map.objectAt(animal1.getPosition()));
         assertTrue(map.isOccupied(animal1.getPosition()));
         assertFalse(map.canMoveTo(animal1.getPosition()));
 
@@ -21,7 +21,7 @@ public class RectangularMapTest {
         assertTrue(map.canMoveTo(new Vector2d(2, 2)));
         Animal animal2 = new Animal(map);
         assertNotNull(animal2);
-        assertEquals(map.objectAt(animal1.getPosition()), animal1);
+        assertEquals(animal1, map.objectAt(animal1.getPosition()));
         assertTrue(map.isOccupied(animal1.getPosition()));
         assertFalse(map.canMoveTo(animal1.getPosition()));
 

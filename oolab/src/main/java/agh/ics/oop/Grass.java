@@ -2,7 +2,6 @@ package agh.ics.oop;
 
 public class Grass {
 
-
     Vector2d position;
 
     Grass(Vector2d position) {
