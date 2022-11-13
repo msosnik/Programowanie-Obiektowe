@@ -6,7 +6,7 @@ import java.util.List;
 public abstract class AbstractWorldMap implements IWorldMap {
 
 
-    protected List<Animal> animals = new ArrayList<>();
+    protected List<IMapElement> mapElements = new ArrayList<>();
 
 
     @Override
@@ -24,7 +24,7 @@ public abstract class AbstractWorldMap implements IWorldMap {
     @Override
     public boolean place(Animal animal) {
         if (!isOccupied(animal.getPosition()) && isOnMap(animal.getPosition())) {
-            animals.add(animal);
+            mapElements.add(animal);
             return true;
         }
         return false;
@@ -37,9 +37,9 @@ public abstract class AbstractWorldMap implements IWorldMap {
 
     @Override
     public Object objectAt(Vector2d position) {
-        for (Animal a : animals) {
-            if (a.isAt(position))
-                return a;
+        for (IMapElement e : mapElements) {
+            if (e.isAt(position))
+                return e;
         }
 
         return null;
@@ -52,14 +52,14 @@ public abstract class AbstractWorldMap implements IWorldMap {
 
     }
     protected Vector2d getLowerLeft() {
-        int xMin = animals.stream().mapToInt( g -> g.getPosition().x).min().getAsInt();
-        int yMin = animals.stream().mapToInt( g -> g.getPosition().y).min().getAsInt();
+        int xMin = mapElements.stream().mapToInt(g -> g.getPosition().x).min().getAsInt();
+        int yMin = mapElements.stream().mapToInt(g -> g.getPosition().y).min().getAsInt();
         return new Vector2d(xMin, yMin);
     }
     
     protected Vector2d getUpperRight() {
-        int xMax = animals.stream().mapToInt( g -> g.getPosition().x).max().getAsInt();
-        int yMax = animals.stream().mapToInt( g -> g.getPosition().y).max().getAsInt();
+        int xMax = mapElements.stream().mapToInt(g -> g.getPosition().x).max().getAsInt();
+        int yMax = mapElements.stream().mapToInt(g -> g.getPosition().y).max().getAsInt();
         return new Vector2d(xMax, yMax);
     }
 }
