@@ -1,12 +1,17 @@
 package agh.ics.oop;
 
-public class Animal extends AbstractMapElement{
+import java.util.ArrayList;
+import java.util.List;
+
+public class Animal extends AbstractMapElement {
 
 //    public static final Vector2d MAP_BOTTOM = new Vector2d(0, 0);
 //    public static final Vector2d MAP_TOP = new Vector2d(4, 4);
     private static Vector2d DEFAULT_POSITION = new Vector2d(2, 2);
     private IWorldMap map;
     private MapDirection orientation = MapDirection.NORTH;
+
+    private final List<IPositionChangeObserver> observersList = new ArrayList<>();
 
     public Animal(IWorldMap map) {
         this(map, DEFAULT_POSITION);
@@ -17,6 +22,7 @@ public class Animal extends AbstractMapElement{
         this.position = initialPosition;
         eatGrass(initialPosition);
         this.map.place(this);
+        this.observersList.add((IPositionChangeObserver) map);
     }
 
     public MapDirection getOrientation() {
@@ -47,8 +53,9 @@ public class Animal extends AbstractMapElement{
         }
         if (map.canMoveTo(newPosition)) {
             eatGrass(newPosition);
-//        if (newPosition!=null && newPosition.follows(MAP_BOTTOM) && newPosition.precedes(MAP_TOP)){
+            positionChanged(position, newPosition);
             this.position = newPosition;
+//        if (newPosition!=null && newPosition.follows(MAP_BOTTOM) && newPosition.precedes(MAP_TOP)){
         }
     }
 
@@ -58,6 +65,20 @@ public class Animal extends AbstractMapElement{
             GrassField grassField = (GrassField) this.map;
             Vector2d newGrassPosition = grassField.generateGrassPosition();
             grass.setPosition(newGrassPosition);
+        }
+    }
+
+    void addObserver(IPositionChangeObserver observer) {
+        observersList.add(observer);
+    }
+
+    void removeObserver(IPositionChangeObserver observer) {
+        observersList.remove(observer);
+    }
+
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
+        for (IPositionChangeObserver o : observersList) {
+            o.positionChanged(oldPosition, newPosition);
         }
     }
 
