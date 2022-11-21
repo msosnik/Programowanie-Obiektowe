@@ -76,7 +76,7 @@ public class Animal extends AbstractMapElement {
         observersList.remove(observer);
     }
 
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
+    private void positionChanged(Vector2d oldPosition, Vector2d newPosition){
         for (IPositionChangeObserver o : observersList) {
             o.positionChanged(oldPosition, newPosition);
         }

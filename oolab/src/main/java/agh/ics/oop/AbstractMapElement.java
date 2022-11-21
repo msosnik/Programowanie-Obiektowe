@@ -12,4 +12,7 @@ public abstract class AbstractMapElement implements IMapElement{
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
+
+    @Override
+    public abstract String toString();
 }

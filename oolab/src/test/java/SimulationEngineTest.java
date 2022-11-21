@@ -37,6 +37,14 @@ public class SimulationEngineTest {
         assertNotNull(map.objectAt(animal1Pos));
         assertEquals(map.place(new Animal(map, animal2Pos)), false);
 
+        GrassField gMap = new GrassField(17);
+        Vector2d[] gPositions = {new Vector2d(1, 2), new Vector2d(3, 2)};
+        String[] gMoves = {"f", "b", "l", "b", "b", "r", "b", "f"};
+
+        IEngine gEngine = new SimulationEngine(OptionsParser.parse(gMoves), gMap, gPositions);
+        engine.run();
+
+        assertEquals(1, 1);
 
     }
 }
