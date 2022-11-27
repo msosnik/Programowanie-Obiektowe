@@ -20,9 +20,10 @@ public class Animal extends AbstractMapElement {
     public Animal(IWorldMap map, Vector2d initialPosition) {
         this.map = map;
         this.position = initialPosition;
-        eatGrass(initialPosition);
         this.map.place(this);
-        this.observersList.add((IPositionChangeObserver) map);
+        if (map instanceof IPositionChangeObserver){
+            this.addObserver((IPositionChangeObserver) map);
+        }
     }
 
     public MapDirection getOrientation() {
@@ -52,21 +53,13 @@ public class Animal extends AbstractMapElement {
                 break;
         }
         if (map.canMoveTo(newPosition)) {
-            eatGrass(newPosition);
+//            eatGrass(newPosition);
             positionChanged(position, newPosition);
             this.position = newPosition;
 //        if (newPosition!=null && newPosition.follows(MAP_BOTTOM) && newPosition.precedes(MAP_TOP)){
         }
     }
 
-    private void eatGrass(Vector2d newPosition) {
-        if (map.objectAt(newPosition) instanceof Grass) {
-            Grass grass = (Grass) map.objectAt(newPosition);
-            GrassField grassField = (GrassField) this.map;
-            Vector2d newGrassPosition = grassField.generateGrassPosition();
-            grass.setPosition(newGrassPosition);
-        }
-    }
 
     void addObserver(IPositionChangeObserver observer) {
         observersList.add(observer);

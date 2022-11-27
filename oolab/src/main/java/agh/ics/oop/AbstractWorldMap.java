@@ -18,6 +18,7 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
 
     }
 
+
     @Override
     public boolean canMoveTo(Vector2d position) {
         if (position == null)
@@ -31,12 +32,14 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
     abstract protected boolean isOnMap(Vector2d position);
 
     @Override
-    public boolean place(Animal animal) {
-        if (canMoveTo(animal.getPosition())) {
-            mapElements.put(animal.getPosition(), animal);
+    public boolean place(Animal animal) throws IllegalArgumentException {
+        Vector2d position = animal.getPosition();
+        if (canMoveTo(position)) {
+
+            mapElements.put(position, animal);
             return true;
         }
-        return false;
+        throw new IllegalArgumentException(animal + " can't be placed on top of another animal");
     }
 
     @Override

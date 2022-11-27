@@ -6,15 +6,31 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 public class Vector2d {
-    final public int x;
-    final public int y;
+    final public Integer x;
+    final public Integer y;
 
     public Vector2d(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-//    public static void main(String[] args) {
+    public static int compareX(Vector2d v1, Vector2d v2) {
+        int result = v1.x.compareTo(v2.x);
+        if (result == 0) {
+            result = v1.y.compareTo(v2.y);
+        }
+        return result;
+    }
+
+    public static int compareY(Vector2d v1, Vector2d v2) {
+        int result = v1.y.compareTo(v2.y);
+        if (result == 0) {
+            result = v1.x.compareTo(v2.x);
+        }
+        return result;
+    }
+
+    //    public static void main(String[] args) {
 //        Vector2d position1 = new Vector2d(1,2);
 //        System.out.println(position1);
 //        Vector2d position2 = new Vector2d(-2,1);
