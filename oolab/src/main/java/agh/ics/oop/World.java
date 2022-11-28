@@ -1,19 +1,23 @@
 package agh.ics.oop;
 
+import agh.ics.oop.gui.App;
+import javafx.application.Application;
+
 import java.util.Arrays;
 
 public class World {
     public static void main(String[] args){
 
-        System.out.println("System started");
-        MoveDirection[] directions = new OptionsParser().parse(args);
-        IWorldMap map = new RectangularMap(10, 5);
-        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
-        IEngine engine = new SimulationEngine(directions, map, positions);
-        engine.run();
-        System.out.println(map.toString());
+        try {
+            System.out.println("System started");
 
-        System.out.println("System finished");
+            Application.launch(App.class, args);
+
+            System.out.println("System finished");
+        } catch ( IllegalArgumentException ex) {
+            System.err.println(ex);
+
+        }
 
     }
     static void run(MoveDirection[] directions, String[] zwierzaki){
