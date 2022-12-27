@@ -3,98 +3,183 @@ package agh.ics.oop.gui;
 import agh.ics.oop.*;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-public class App extends Application {
+public class App extends Application implements ISimulationStepObserver{
+
+    private GrassField map;
+    private GridPane grid;
+
+    private Button startSimulationButton;
+    private TextField directionsInput;
+
+    private SimulationEngine engine;
+
+    @Override
+    public void init() throws Exception {
+        super.init();
+        //internals init, keeping inside function 4 now for scoping.
+        String[] args = getParameters().getRaw().toArray(new String[0]);
+        MoveDirection[] directions = OptionsParser.parse(args);
+        map = new GrassField(10);
+        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
+
+        engine = new SimulationEngine(map, positions);
+        engine.addObserver(this);
+        engine.setMoveDelay(1000);
+//        Thread engineThread = new Thread(engine);
+//        engineThread.start();
+    }
+
+    public static void main(String[] args){
+
+        try {
+            System.out.println("System started");
+
+            Application.launch(App.class, args);
+
+            System.out.println("System finished");
+        } catch ( IllegalArgumentException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static int GRID_WIDTH = 800;
+    public static int GRID_HEIGHT = 800;
 
 
     @Override
     public void start(Stage primaryStage) {
 
-        //internals init, keeping inside function 4 now for scoping.
-        String[] args = {}; //immiediately reassigned, but jaba be java.
-        args = getParameters().getRaw().toArray(args);
-        MoveDirection[] directions = OptionsParser.parse(args);
-        GrassField map = new GrassField(10);
-        Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
-        IEngine engine = new SimulationEngine(directions, map, positions);
-        engine.run(); //put the animals at the correct positions.
-
         //parent grid to all map labels
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setGridLinesVisible(true);
+        grid.setMinSize(GRID_WIDTH, GRID_HEIGHT);
 
-        //row/col amt in grid
-        Vector2d ll = map.getLowerLeft();
-        Vector2d ur = map.getUpperRight();
+        startSimulationButton = new Button("Start");
+        directionsInput = new TextField();
 
-        //ur.follows(ll) == true => x_amt,y_amt >0
-        int x_amt = ur.x - ll.x + 2; //1 for coordinate values,
-        int y_amt = ur.y - ll.y + 2; //1 for if ll.x == ur.x (or y) we till need to show the row/col.
+        VBox options = new VBox(directionsInput, startSimulationButton);
+        options.setMinWidth(400);
+        HBox contents = new HBox(options, grid);
 
-        System.out.println(x_amt);
-        System.out.println(y_amt);
+        //global foramatting
+        Scene scene = new Scene(contents, 1200, 800);
+
+        drawMap(map, grid);
+
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+        startSimulationButton.setOnAction(event ->
+                setOptionsAndStartSimulation()
+        );
+    }
+
+    private void setOptionsAndStartSimulation() {
+        engine.setDirections(OptionsParser.parse(directionsInput.getText().split(" ")));
+        Thread engineThread = new Thread(engine);
+        engineThread.start();
+    }
+
+    private static void drawMap(GrassField map, GridPane grid) {
+        grid.getChildren().clear();
+
+        //row/col in grid
+        Vector2d lowerLeft = map.getLowerLeft();
+        Vector2d upperRight = map.getUpperRight();
+
+        //upperRight.follows(lowerLeft) == true => gridColumnCount,gridRowCount >0
+        int gridColumnCount = upperRight.x - lowerLeft.x + 2; //1 for coordinate values,
+        int gridRowCount = upperRight.y - lowerLeft.y + 2; //1 for if lowerLeft.x == upperRight.x (or y) we till need to show the row/col.
+
+        System.out.println("gridColumnCount:" + gridColumnCount);
+        System.out.println("gridRowCount: " + gridRowCount);
+
+        int columnWidth = GRID_WIDTH/(2+ upperRight.x - lowerLeft.x); //related to scene size
+        int rowHeight = GRID_HEIGHT/(2+ upperRight.y - lowerLeft.y); //related to scene size;
+
+        System.out.println("field size: " + columnWidth + ", " + rowHeight);
+
+        for (int y = 0; y < gridRowCount; y++) {
+            grid.getRowConstraints().add(new RowConstraints(rowHeight));
+        }
+        for (int x = 0; x < gridColumnCount; x++) {
+            grid.getColumnConstraints().add(new ColumnConstraints(columnWidth));
+        }
 
         //X-> col. Y-> row.
         //x==y==0 => x"y/x"
         grid.add(new Label("y/x"),0,0);
 
         //x==0,y!=0 => x coords
-        for (int x = 1; x <x_amt; x++) {
-            String coord = ((Integer)(ll.x+x-1)).toString(); //ll.x -> smallest x. + iteration variable-1, since we start from 1.
-            Label tadd = new Label(coord);
-            grid.add(tadd,x,0);
+        for (int x = 1; x <gridColumnCount; x++) {
+            Integer coord = lowerLeft.x+x-1;
+            Label label = new Label(coord.toString());
+//            label.setMinSize(columnWidth, rowHeight);
+            grid.add(label, x,0);
         }
         //y==0, x!= 0 => y coords
-        for (int y = 1; y < y_amt; y++) {
-            String coord = ((Integer)(ur.y-y+1)).toString(); //y vals must decrease when going downwards.
-            Label tadd = new Label(coord);
-            grid.add(tadd, 0, y);
-        }
-        //x*y != 0 => map objects.
-        for (int x = 1; x < x_amt; x++) {
-            for (int y = 1; y < y_amt; y++) {
-                //Grid coords -> map coords conversion.
-                int mapx = ll.x+x-1;
-                int mapy = ur.y-y+1;
-                Vector2d mapcoords = new Vector2d(mapx, mapy);
-                IMapElement mapObject = (IMapElement) map.objectAt(mapcoords);
-                Label tadd;
-                if(mapObject == null)
-                    tadd = new Label("");
-                else {
-                    GuiElementBox guiElementBox = new GuiElementBox(mapObject);
-                    tadd = new Label(mapObject.toString());
-                }
-                grid.add(tadd, x, y);
-            }
+        for (int y = 1; y < gridRowCount; y++) {
+            Integer coord = upperRight.y-y+1;
+            Label label = new Label(coord.toString());
+//            label.setMinSize(columnWidth, rowHeight);
+            grid.add(label, 0, y);
         }
 
-        //global foramatting
-        int width = 20; //magic numbers the assignment doest tell you the values of, so I have to invent my own... AGAIN!
-        int height = 20;
-        for (int y = 0; y < y_amt; y++) {
-            grid.getRowConstraints().add(new RowConstraints(height));
-        }
-        for (int x = 0; x < x_amt; x++) {
-            grid.getColumnConstraints().add(new ColumnConstraints(width));
-        }
+        System.out.println("grid size: " + grid.getWidth() + ", " + grid.getHeight());
+
         for (Node node : grid.getChildren()) {
             GridPane.setHalignment(node, HPos.CENTER);
+            GridPane.setValignment(node, VPos.CENTER);
         }
-        Scene scene = new Scene(grid, 400, 400);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        //x*y != 0 => map objects.
+        for (int x = 1; x < gridColumnCount; x++) {
+            for (int y = 1; y < gridRowCount; y++) {
+                // Grid coords -> map coords conversion.
+                int mapX = lowerLeft.x+x-1;
+                int mapY = upperRight.y-y+1;
+                Vector2d mapCoords = new Vector2d(mapX, mapY);
+                IMapElement mapObject = (IMapElement) map.objectAt(mapCoords);
+                if (mapObject != null) {
+                    Paint green = new Color(0.3, 1, 0.1, 0.5);
 
-        /* Extra cols from the grid... odd. */
+                    if (mapObject instanceof Grass) {
+                        Rectangle grass = new Rectangle(columnWidth, rowHeight, green);
+                        grid.add(grass, x, y);
+                    }
+                    if (mapObject instanceof Animal) {
+                        int radius = Math.min(columnWidth, rowHeight)/2;
+                        Paint color = new Color(0.7, 0.5, 0, 0.5);
+                        Circle circle = new Circle(radius, color);
+                        grid.add(circle, x, y);
+                    }
+                }
+            }
+        }
     }
 
 
+    @Override
+    public void stepCompleted(int completedStep) {
+        if (map != null && grid != null) {
+            Platform.runLater(() -> drawMap(map, grid));
+//            drawMap(this.map, this.grid);
+        }
+    }
 }

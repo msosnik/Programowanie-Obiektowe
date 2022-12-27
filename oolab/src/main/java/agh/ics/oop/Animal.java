@@ -46,7 +46,7 @@ public class Animal extends AbstractMapElement {
             case WEST -> "right.png";
             case SOUTH -> "down.png";
         };
-        return "/src/main/resources/".concat(name);
+        return name;
     }
 
     public void move(MoveDirection direction) {
