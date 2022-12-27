@@ -7,4 +7,6 @@ public interface IMapElement {
     public boolean isAt(Vector2d position);
 
     public String toString();
+
+    public String getResourceName();
 }

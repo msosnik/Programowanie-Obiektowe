@@ -65,12 +65,14 @@ public class App extends Application {
                 int mapx = ll.x+x-1;
                 int mapy = ur.y-y+1;
                 Vector2d mapcoords = new Vector2d(mapx, mapy);
-                Object mapObject = map.objectAt(mapcoords);
+                IMapElement mapObject = (IMapElement) map.objectAt(mapcoords);
                 Label tadd;
                 if(mapObject == null)
                     tadd = new Label("");
-                else
+                else {
+                    GuiElementBox guiElementBox = new GuiElementBox(mapObject);
                     tadd = new Label(mapObject.toString());
+                }
                 grid.add(tadd, x, y);
             }
         }

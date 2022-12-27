@@ -1,8 +1,14 @@
 package agh.ics.oop;
 
-public abstract class AbstractMapElement implements IMapElement{
+import javafx.scene.image.Image;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+public abstract class AbstractMapElement implements IMapElement {
 
     protected Vector2d position;
+
     @Override
     public Vector2d getPosition() {
         return position;
@@ -15,4 +21,5 @@ public abstract class AbstractMapElement implements IMapElement{
 
     @Override
     public abstract String toString();
+
 }

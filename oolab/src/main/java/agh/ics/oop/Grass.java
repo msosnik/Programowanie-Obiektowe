@@ -11,7 +11,13 @@ public class Grass extends AbstractMapElement {
         return "*";
     }
 
+
     public void setPosition(Vector2d newGrassPosition) {
         this.position = newGrassPosition;
+    }
+
+    @Override
+    public String getResourceName() {
+        return "/src/main/resources/grass.png";
     }
 }

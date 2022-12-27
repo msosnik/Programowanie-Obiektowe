@@ -24,6 +24,9 @@ public class Animal extends AbstractMapElement {
         if (map instanceof IPositionChangeObserver){
             this.addObserver((IPositionChangeObserver) map);
         }
+        if (map instanceof GrassField) {
+            this.addObserver(((GrassField) map).getMapBoundary());
+        }
     }
 
     public MapDirection getOrientation() {
@@ -33,6 +36,17 @@ public class Animal extends AbstractMapElement {
     public String toString() {
 //        return "Animal position: " + position.toString() + " Animal orientation: " + orientation.toString();
         return orientation.toString();
+    }
+
+    @Override
+    public String getResourceName() {
+        String name = switch (this.orientation) {
+            case NORTH -> "up.png";
+            case EAST -> "left.png";
+            case WEST -> "right.png";
+            case SOUTH -> "down.png";
+        };
+        return "/src/main/resources/".concat(name);
     }
 
     public void move(MoveDirection direction) {

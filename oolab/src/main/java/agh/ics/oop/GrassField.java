@@ -24,6 +24,10 @@ public class GrassField extends AbstractWorldMap {
         }
     }
 
+    public MapBoundary getMapBoundary() {
+        return mapBoundary;
+    }
+
     private Vector2d generateRandomPosition() {
         int x = random.nextInt(0, (int) sqrt(this.grassCount *10));
         int y = random.nextInt(0, (int) sqrt(this.grassCount *10));
@@ -49,7 +53,7 @@ public class GrassField extends AbstractWorldMap {
     public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
         eatGrassIfPresent(newPosition);
         super.positionChanged(oldPosition, newPosition);
-        mapBoundary.positionChanged(oldPosition, newPosition);
+//        mapBoundary.positionChanged(oldPosition, newPosition);
 
     }
 
