@@ -1,9 +1,7 @@
 package agh.ics.oop;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
 
@@ -71,8 +69,23 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
 
 //        int xMax = mapElements.stream().mapToInt(g -> g.getPosition().x).max().getAsInt();
 //        int yMax = mapElements.stream().mapToInt(g -> g.getPosition().y).max().getAsInt();
-        int xMax = mapElements.keySet().stream().mapToInt(p -> p.x).max().getAsInt();;
-        int yMax = mapElements.keySet().stream().mapToInt(p -> p.y).max().getAsInt();;
+        int xMax = mapElements.keySet().stream().mapToInt(p -> p.x).max().getAsInt();
+        int yMax = mapElements.keySet().stream().mapToInt(p -> p.y).max().getAsInt();
         return new Vector2d(xMax, yMax);
     }
+
+    public List<Animal> getAnimals() {
+        return mapElements.values().stream()
+                .filter(o -> o instanceof Animal)
+                .map(o -> (Animal) o)
+                .collect(Collectors.toList());
+    }
+
+    public List<Grass> getGrassList() {
+        return mapElements.values().stream()
+                .filter(o -> o instanceof Grass)
+                .map(o -> (Grass) o)
+                .collect(Collectors.toList());
+    }
+
 }

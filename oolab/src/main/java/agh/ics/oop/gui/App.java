@@ -5,7 +5,6 @@ import agh.ics.oop.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.Node;
@@ -19,9 +18,11 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class App extends Application implements ISimulationStepObserver{
 
-    private GrassField map;
+    private RectangularGrassField map;
     private GridPane grid;
 
     private Button startSimulationButton;
@@ -32,15 +33,20 @@ public class App extends Application implements ISimulationStepObserver{
     @Override
     public void init() throws Exception {
         super.init();
-        //internals init, keeping inside function 4 now for scoping.
         String[] args = getParameters().getRaw().toArray(new String[0]);
-        MoveDirection[] directions = OptionsParser.parse(args);
-        map = new GrassField(10);
+        File propertyFile = new File(args[0]);
+        PropertyFileLoader propertyFileLoader = new PropertyFileLoader(propertyFile);
+        int genomeLength = propertyFileLoader.getIntValue(ESimulationProperty.dlugoscGenomuZwierzakow);
+
+        //MoveDirection[] directions = OptionsParser.parse(args);
+        map = new RectangularGrassField(propertyFileLoader.getIntValue(ESimulationProperty.szerokoscMapy),
+                propertyFileLoader.getIntValue(ESimulationProperty.wysokoscMapy),
+                propertyFileLoader.getIntValue(ESimulationProperty.startowaLiczbaRoslin));
         Vector2d[] positions = { new Vector2d(2,2), new Vector2d(3,4) };
 
-        engine = new SimulationEngine(map, positions);
+        engine = new SimulationEngine(map, propertyFileLoader.getIntValue(ESimulationProperty.startowaLiczbaZwierzakow), genomeLength);
         engine.addObserver(this);
-        engine.setMoveDelay(1000);
+        engine.setAnimationStepDelay(propertyFileLoader.getIntValue(ESimulationProperty.animationStepDelay));
 //        Thread engineThread = new Thread(engine);
 //        engineThread.start();
     }
@@ -71,13 +77,13 @@ public class App extends Application implements ISimulationStepObserver{
         grid.setMinSize(GRID_WIDTH, GRID_HEIGHT);
 
         startSimulationButton = new Button("Start");
-        directionsInput = new TextField();
+//        directionsInput = new TextField();
+        Button stepSimulationButton = new Button("Step");
 
-        VBox options = new VBox(directionsInput, startSimulationButton);
+        VBox options = new VBox(startSimulationButton, stepSimulationButton);
         options.setMinWidth(400);
         HBox contents = new HBox(options, grid);
 
-        //global foramatting
         Scene scene = new Scene(contents, 1200, 800);
 
         drawMap(map, grid);
@@ -87,17 +93,37 @@ public class App extends Application implements ISimulationStepObserver{
         primaryStage.show();
 
         startSimulationButton.setOnAction(event ->
-                setOptionsAndStartSimulation()
+                startStopSimulation()
         );
+
+        stepSimulationButton.setOnAction(event ->
+                stepForwardSimulation()
+        );
+
     }
 
-    private void setOptionsAndStartSimulation() {
-        engine.setDirections(OptionsParser.parse(directionsInput.getText().split(" ")));
+    private void stepForwardSimulation() {
+        engine.setPaused(true);
+        startSimulationButton.setText("Start");
+
         Thread engineThread = new Thread(engine);
         engineThread.start();
     }
 
-    private static void drawMap(GrassField map, GridPane grid) {
+    private void startStopSimulation() {
+
+        if (engine.isPaused()) {
+            engine.setPaused(false);
+            Thread engineThread = new Thread(engine);
+            engineThread.start();
+            startSimulationButton.setText("Pause");
+        } else {
+            engine.setPaused(true);
+            startSimulationButton.setText("Start");
+        }
+    }
+
+    private static void drawMap(RectangularGrassField map, GridPane grid) {
         grid.getChildren().clear();
 
         //row/col in grid
@@ -130,14 +156,14 @@ public class App extends Application implements ISimulationStepObserver{
         //x==0,y!=0 => x coords
         for (int x = 1; x <gridColumnCount; x++) {
             Integer coord = lowerLeft.x+x-1;
-            Label label = new Label(coord.toString());
+            Label label = new Label(gridRowCount <= 40 ? coord.toString() : ".");
 //            label.setMinSize(columnWidth, rowHeight);
             grid.add(label, x,0);
         }
         //y==0, x!= 0 => y coords
         for (int y = 1; y < gridRowCount; y++) {
             Integer coord = upperRight.y-y+1;
-            Label label = new Label(coord.toString());
+            Label label = new Label(gridRowCount <= 40 ? coord.toString() : ".");
 //            label.setMinSize(columnWidth, rowHeight);
             grid.add(label, 0, y);
         }

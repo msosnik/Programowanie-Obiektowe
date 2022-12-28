@@ -11,13 +11,15 @@ public class Animal extends AbstractMapElement {
     private IWorldMap map;
     private MapDirection orientation = MapDirection.NORTH;
 
+    private List<Integer> genome;
+
     private final List<IPositionChangeObserver> observersList = new ArrayList<>();
 
-    public Animal(IWorldMap map) {
-        this(map, DEFAULT_POSITION);
+    public Animal(IWorldMap map, int genomeLength) {
+        this(map, DEFAULT_POSITION, genomeLength);
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition) {
+    public Animal(IWorldMap map, Vector2d initialPosition, int genomeLength) {
         this.map = map;
         this.position = initialPosition;
         this.map.place(this);
@@ -26,6 +28,10 @@ public class Animal extends AbstractMapElement {
         }
         if (map instanceof GrassField) {
             this.addObserver(((GrassField) map).getMapBoundary());
+        }
+        this.genome = new ArrayList<>();
+        for (int i =0; i<genomeLength; i++) {
+            genome.add(1);
         }
     }
 
