@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class PropertyFileLoader {
+public class SimulationPropertyFile {
 
     Properties properties;
 
-    public PropertyFileLoader(File filePath) throws IOException {
+    public SimulationPropertyFile(File filePath) throws IOException {
         properties = new Properties();
         try (InputStream is = new FileInputStream(filePath)) {
             properties.load(is);

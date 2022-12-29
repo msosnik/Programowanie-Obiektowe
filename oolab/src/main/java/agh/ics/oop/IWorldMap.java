@@ -1,5 +1,7 @@
 package agh.ics.oop;
 
+import java.util.List;
+
 /**
  * The interface responsible for interacting with the map of the world.
  * Assumes that Vector2d and MoveDirection classes are defined.
@@ -33,12 +35,9 @@ public interface IWorldMap {
      */
     boolean isOccupied(Vector2d position);
 
-    /**
-     * Return an object at a given position.
-     *
-     * @param position The position of the object.
-     * @return Object or null if the position is not occupied.
-     */
-    Object objectAt(Vector2d position);
+    Vector2d generateRandomPosition();
+
+    int getHeight();
+    int getWidth();
 }
 

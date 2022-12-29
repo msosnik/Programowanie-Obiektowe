@@ -3,28 +3,16 @@ package agh.ics.oop;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver{
+public abstract class AbstractWorldMap implements IWorldMap {
 
 
-    protected Map<Vector2d, IMapElement> mapElements = new HashMap<>();
-
-    @Override
-    public void positionChanged(Vector2d oldPosition, Vector2d newPosition){
-        IMapElement movedElement = mapElements.get(oldPosition);
-        mapElements.remove(oldPosition);
-        mapElements.put(newPosition, movedElement);
-
-    }
-
+    protected List<IMapElement> mapElements = new ArrayList<>();
 
     @Override
     public boolean canMoveTo(Vector2d position) {
         if (position == null)
             return false;
-        boolean isOccupiedByAnimal = objectAt(position) instanceof Animal;
-        if (isOnMap(position) && !isOccupiedByAnimal)
-            return true;
-        return false;
+        return isOnMap(position);
     }
 
     abstract protected boolean isOnMap(Vector2d position);
@@ -34,7 +22,7 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
         Vector2d position = animal.getPosition();
         if (canMoveTo(position)) {
 
-            mapElements.put(position, animal);
+            mapElements.add(animal);
             return true;
         }
         throw new IllegalArgumentException(animal + " can't be placed on top of another animal");
@@ -42,47 +30,23 @@ public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObse
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return objectAt(position) != null;
+        return mapElements.stream().anyMatch(e -> e.isAt(position));
     }
 
-    @Override
-    public Object objectAt(Vector2d position) {
-                return mapElements.get(position);
-
+    public List<IMapElement> getMapElements() {
+        return mapElements;
     }
 
-    @Override
-    public String toString() {
-        MapVisualizer mapDrawer = new MapVisualizer(this);
-        return mapDrawer.draw(getLowerLeft(), getUpperRight());
-
-    }
-    protected Vector2d getLowerLeft() {
-        int xMin = mapElements.keySet().stream().mapToInt(p -> p.x).min().getAsInt();
-        int yMin = mapElements.keySet().stream().mapToInt(p -> p.y).min().getAsInt();
-//        int xMin = mapElements.stream().mapToInt(g -> g.getPosition().x).min().getAsInt();
-//        int yMin = mapElements.stream().mapToInt(g -> g.getPosition().y).min().getAsInt();
-        return new Vector2d(xMin, yMin);
-    }
-    
-    protected Vector2d getUpperRight() {
-
-//        int xMax = mapElements.stream().mapToInt(g -> g.getPosition().x).max().getAsInt();
-//        int yMax = mapElements.stream().mapToInt(g -> g.getPosition().y).max().getAsInt();
-        int xMax = mapElements.keySet().stream().mapToInt(p -> p.x).max().getAsInt();
-        int yMax = mapElements.keySet().stream().mapToInt(p -> p.y).max().getAsInt();
-        return new Vector2d(xMax, yMax);
-    }
 
     public List<Animal> getAnimals() {
-        return mapElements.values().stream()
+        return mapElements.stream()
                 .filter(o -> o instanceof Animal)
                 .map(o -> (Animal) o)
                 .collect(Collectors.toList());
     }
 
     public List<Grass> getGrassList() {
-        return mapElements.values().stream()
+        return mapElements.stream()
                 .filter(o -> o instanceof Grass)
                 .map(o -> (Grass) o)
                 .collect(Collectors.toList());

@@ -16,8 +16,5 @@ public class Grass extends AbstractMapElement {
         this.position = newGrassPosition;
     }
 
-    @Override
-    public String getResourceName() {
-        return "grass.png";
-    }
+
 }

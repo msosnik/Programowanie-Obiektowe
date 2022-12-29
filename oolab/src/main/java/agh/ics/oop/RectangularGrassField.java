@@ -1,6 +1,10 @@
 package agh.ics.oop;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class RectangularGrassField extends AbstractWorldMap {
     private static Random random = new Random();
@@ -10,30 +14,69 @@ public class RectangularGrassField extends AbstractWorldMap {
 
     public RectangularGrassField(int width, int height, int grassCount) {
 
-        upperRight = new Vector2d(width, height);
+        upperRight = new Vector2d(width-1, height-1);
 
-        while (this.mapElements.size()<grassCount) {
-            Vector2d position = generateElementPosition();
-
-            Grass grass = new Grass(position);
-            mapElements.put(position, grass);
-        }
+        Map<Vector2d, Grass> grassMap = new HashMap<>();
+        plantGrass(grassCount, grassMap);
 
     }
-    private Vector2d generateRandomPosition() {
-        int x = random.nextInt(0, upperRight.x);
-        int y = random.nextInt(0, upperRight.y);
+
+    public void plantGrass(int grassCount, Map<Vector2d, Grass> grassMap) {
+        int fieldSize = getWidth() * getHeight();
+        int counter = 0;
+        while (counter < grassCount && grassMap.size() < fieldSize) {
+            Vector2d position = generateElementPosition(grassMap);
+            Grass grass = new Grass(position);
+            this.mapElements.add(grass);
+            grassMap.put(position, grass);
+            counter++;
+        }
+    }
+
+    public Map<Vector2d, Grass> getPositionToGrassMap() {
+        Map<Vector2d, Grass> grassMap = new HashMap<>();
+        for (Grass grass : getGrassList()) {
+            grassMap.put(grass.getPosition(), grass);
+        }
+        return grassMap;
+    }
+    public Vector2d generateRandomPosition() {
+        int x = random.nextInt(0, getWidth());
+        int y = random.nextInt(0, getHeight());
 
         Vector2d position = new Vector2d(x, y);
         return position;
     }
 
-    public Vector2d generateElementPosition() {
-        Vector2d newPosition = generateRandomPosition();
+    public Vector2d generateRandomGrassPosition() {
+        int x = random.nextInt(0, getWidth());
 
-        while (isOccupied(newPosition)) {
+        int sizeOfRainForrest = getHeight() / 5;
+        if (getHeight() % 5 != 0)
+            sizeOfRainForrest += 1;
+        int rainForestStartIndex = (getHeight() - sizeOfRainForrest) / 2;
+        int newHeight = getHeight() + sizeOfRainForrest * 3;
+        int yRandomNumber = random.nextInt(0, newHeight);
+        int y = yRandomNumber < getHeight() ?
+                yRandomNumber :
+                rainForestStartIndex + (yRandomNumber-getHeight()) % sizeOfRainForrest;
 
-            newPosition = generateRandomPosition();
+        Vector2d position = new Vector2d(x, y);
+        return position;
+    }
+
+    public int getHeight() {
+        return upperRight.y + 1;
+    }
+
+    public int getWidth() {
+        return upperRight.x + 1;
+    }
+
+    public Vector2d generateElementPosition(Map<Vector2d, Grass> grassMap) {
+        Vector2d newPosition = generateRandomGrassPosition();
+        while (grassMap.containsKey(newPosition)) {
+            newPosition = generateRandomGrassPosition();
         }
         return newPosition;
     }
@@ -51,4 +94,20 @@ public class RectangularGrassField extends AbstractWorldMap {
         return upperRight;
     }
 
+    public int getEmptyFieldCount() {
+        int allFields = this.getWidth() * this.getHeight();
+        int occupiedFields = mapElements.stream().map(e->e.getPosition()).collect(Collectors.toSet()).size();
+        return allFields-occupiedFields;
+    }
+
+    public Map.Entry<String, Integer>  getMostPopularGenes() {
+        Map<String, Integer> genomeOccurences = new HashMap<>();
+        for (Animal a : getAnimals()) {
+            String key = a.getGenome().toString();
+            genomeOccurences.computeIfPresent(key, (k, v)-> v+1);
+            genomeOccurences.computeIfAbsent(key, k-> 1);
+        }
+        Map.Entry<String, Integer> result = genomeOccurences.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).orElse(null);
+        return result;
+    }
 }
