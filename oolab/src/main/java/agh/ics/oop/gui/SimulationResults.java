@@ -13,6 +13,7 @@ public class SimulationResults {
     public String mostPopularGenome;
     public int mostPopularGenomeCount;
     public double averageLifeLength;
+    public int totalDeadAnimals;
     public double averageEnergy;
 
     public static String getCSVHeaderLine() {
@@ -22,6 +23,7 @@ public class SimulationResults {
                 "emptyFieldCount," +
                 "mostPopularGenomeCount," +
                 "averageLifeLength," +
+                "totalDeadAnimals," +
                 "averageEnergy";
 
         return result;
@@ -29,13 +31,15 @@ public class SimulationResults {
     }
     public String getCSVLine() {
         String result =String.format(
-                "%d,%d,%d,%d,%d,%.1f,%.1f",
+                "%d,%d,%d,%d,%d,%.1f,%d,%.1f",
                 day,
                 animalCount,
                 grassCount,
                 emptyFieldCount,
                 mostPopularGenomeCount,
-                averageLifeLength,averageEnergy);
+                averageLifeLength,
+                totalDeadAnimals,
+                averageEnergy);
 
         return result;
 

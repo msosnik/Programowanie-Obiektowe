@@ -13,16 +13,15 @@ public class Animal extends AbstractMapElement {
 
     //    public static final Vector2d MAP_BOTTOM = new Vector2d(0, 0);
 //    public static final Vector2d MAP_TOP = new Vector2d(4, 4);
-    private static Vector2d DEFAULT_POSITION = new Vector2d(2, 2);
     private IWorldMap map;
-    private MapDirection orientation = MapDirection.NORTH;
+    private MapDirection orientation;
 
     final private List<Integer> genome;
     private int currentGeneIndex;
 
-    private int birthDay;
+    private final int birthDay;
     private int energy;
-    private int childrenCount;
+    private int childrenCount =0;
 
     public int getChildrenCount() {
         return childrenCount;
@@ -53,7 +52,8 @@ public class Animal extends AbstractMapElement {
         this.position = initialPosition;
         this.map.place(this);
         this.genome = genome;
-        this.currentGeneIndex = 0;
+        this.currentGeneIndex = random.nextInt(genome.size());
+        this.orientation = MapDirection.values()[random.nextInt(8)];
 
         this.energy = startEnergy;
         this.birthDay = currentDy;
@@ -66,10 +66,6 @@ public class Animal extends AbstractMapElement {
             result.add(gene);
         }
         return result;
-    }
-
-    public MapDirection getOrientation() {
-        return orientation;
     }
 
     public String toString() {

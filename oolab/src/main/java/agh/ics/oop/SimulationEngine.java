@@ -248,5 +248,8 @@ public class SimulationEngine implements IEngine, Runnable{
 //        result = result/deadAnimalsAgeList.size();
 //        return result;
     }
+    public int totalDeadAnimal(){
+        return deadAnimalsAgeList.size();
+    }
 
 }

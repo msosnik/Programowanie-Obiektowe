@@ -41,6 +41,8 @@ public class App extends Application implements ISimulationStepObserver{
 
     Label averageLifeLength;
 
+    Label totalDeadAnimals;
+
     Label mostPopularGenotype;
 
     Label averageEnergy;
@@ -131,6 +133,7 @@ public class App extends Application implements ISimulationStepObserver{
         emptyFieldCount = new Label(".");
         averageEnergy = new Label(".");
         averageLifeLength = new Label(".");
+        totalDeadAnimals = new Label(".");
         mostPopularGenotype = new Label(".");
 
         GridPane controlPanel = new GridPane();
@@ -170,6 +173,11 @@ public class App extends Application implements ISimulationStepObserver{
         rowIndex++;
         controlPanel.add(new Label("Average Life Length:"), 0, rowIndex);
         controlPanel.add(averageLifeLength, 1, rowIndex);
+        controlPanel.getRowConstraints().add(new RowConstraints(rowHeight));
+
+        rowIndex++;
+        controlPanel.add(new Label("Number of dead animas:"), 0, rowIndex);
+        controlPanel.add(totalDeadAnimals, 1, rowIndex);
         controlPanel.getRowConstraints().add(new RowConstraints(rowHeight));
 
         rowIndex++;
@@ -325,6 +333,7 @@ public class App extends Application implements ISimulationStepObserver{
         emptyFieldCount.setText(""+simulationResults.emptyFieldCount);
         averageLifeLength.setText(simulationResults.averageLifeLength > 0 ?
                 String.format( "%.1f", simulationResults.averageLifeLength) : "-");
+        totalDeadAnimals.setText(""+simulationResults.totalDeadAnimals);
         double avgEnergy = simulationResults.averageEnergy;
         averageEnergy.setText(avgEnergy>0 ? String.format("%.1f", avgEnergy) : "-");
         mostPopularGenotype.setText(simulationResults.mostPopularGenomeCount > 0 ?
@@ -340,6 +349,7 @@ public class App extends Application implements ISimulationStepObserver{
         simulationResults.emptyFieldCount = map.getEmptyFieldCount();
 
         simulationResults.averageLifeLength = engine.averageLifeLength().orElse(-1);
+        simulationResults.totalDeadAnimals = engine.totalDeadAnimal();
         simulationResults.averageEnergy = map.getAnimals().stream().mapToDouble(a->a.getEnergy()).average().orElse(-1);
         Map.Entry<String, Integer> mostPopularGene = map.getMostPopularGenes();
         if (mostPopularGene != null) {
