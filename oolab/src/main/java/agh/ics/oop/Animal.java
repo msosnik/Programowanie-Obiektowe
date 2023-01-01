@@ -22,7 +22,15 @@ public class Animal extends AbstractMapElement {
 
     private int birthDay;
     private int energy;
+    private int childrenCount;
 
+    public int getChildrenCount() {
+        return childrenCount;
+    }
+
+    public void setChildrenCount(int childrenCount) {
+        this.childrenCount = childrenCount;
+    }
 
     public int getEnergy() {
         return energy;
@@ -74,7 +82,16 @@ public class Animal extends AbstractMapElement {
 
         // rotate
         this.orientation = this.orientation.rotate(genome.get(currentGeneIndex));
-        currentGeneIndex = (currentGeneIndex + 1) % this.genome.size();
+
+        if (simulationPropertyFile.getIntValue(ESimulationProperty.wariantZachowaniaZwierzakow) == 1) {
+            //pełna predestynacja
+            currentGeneIndex = (currentGeneIndex + 1) % this.genome.size();
+
+        } else {
+            //trochę szaleństwa
+            currentGeneIndex = (currentGeneIndex + random.nextInt(2 ,this.genome.size())) % this.genome.size();
+
+        }
 
         // move
         Vector2d newPosition = this.position.add(orientation.toUnitVector());

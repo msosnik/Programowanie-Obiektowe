@@ -87,7 +87,10 @@ public class SimulationEngine implements IEngine, Runnable{
             for (Vector2d position : animalMap.keySet()) {
                 if (grassMap.keySet().contains(position)) {
                     List<Animal> animalsOnPosition = animalMap.get(position);
-                    animalsOnPosition.sort(Comparator.comparingInt(Animal::getEnergy).reversed());
+                    animalsOnPosition.sort(Comparator.comparingInt(Animal::getEnergy).reversed()
+                            .thenComparingInt(Animal::getBirthDay)
+                            .thenComparingInt(Animal::getChildrenCount).reversed());
+
                     Animal winner = animalsOnPosition.get(0);
                     //real grass eating is here
                     winner.setEnergy(winner.getEnergy() + this.grassEnergy);
@@ -101,7 +104,9 @@ public class SimulationEngine implements IEngine, Runnable{
 
                 List<Animal> animalsOnPosition = animalMap.get(position);
                 if (animalsOnPosition.size() > 1) {
-                    animalsOnPosition.sort(Comparator.comparingInt(Animal::getEnergy).reversed());
+                    animalsOnPosition.sort(Comparator.comparingInt(Animal::getEnergy).reversed()
+                            .thenComparingInt(Animal::getBirthDay)
+                            .thenComparingInt(Animal::getChildrenCount).reversed());
                     Animal winner = animalsOnPosition.get(0);
                     Animal secondParent = animalsOnPosition.get(1);
                     //...
@@ -166,6 +171,8 @@ public class SimulationEngine implements IEngine, Runnable{
         Animal childAnimal = new Animal(this.map, position, childGenome, 2*this.reproductionEnergy, currentStep);
         winner.setEnergy(winner.getEnergy() - this.reproductionEnergy);
         secondParent.setEnergy(secondParent.getEnergy() - this.reproductionEnergy);
+        winner.setChildrenCount(winner.getChildrenCount()+1);
+        secondParent.setChildrenCount(secondParent.getChildrenCount()+1);
     }
 
     private void geneticMutation(int genomeLength, List<Integer> childGenome) {
