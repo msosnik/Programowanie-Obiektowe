@@ -1,7 +1,10 @@
-package agh.ics.oop;
+package project.mapElements;
 
-import agh.ics.oop.gui.ESimulationProperty;
-import agh.ics.oop.gui.SimulationPropertyFile;
+import project.map.IWorldMap;
+import project.map.MapDirection;
+import project.map.Vector2d;
+import project.gui.ESimulationProperty;
+import project.gui.SimulationPropertyFile;
 
 import java.util.ArrayList;
 import java.util.List;

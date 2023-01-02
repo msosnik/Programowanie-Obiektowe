@@ -1,4 +1,4 @@
-package agh.ics.oop;
+package project.simulation;
 
 public interface ISimulationStepObserver {
 

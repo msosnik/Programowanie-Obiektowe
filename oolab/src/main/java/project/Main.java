@@ -1,11 +1,9 @@
-package agh.ics.oop;
+package project;
 
-import agh.ics.oop.gui.App;
+import project.gui.App;
 import javafx.application.Application;
 
-import java.util.Arrays;
-
-public class World {
+public class Main {
     public static void main(String[] args){
 
         try {

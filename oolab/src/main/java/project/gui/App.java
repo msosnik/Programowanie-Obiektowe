@@ -1,6 +1,11 @@
-package agh.ics.oop.gui;
+package project.gui;
 
-import agh.ics.oop.*;
+import project.map.RectangularGrassField;
+import project.map.Vector2d;
+import project.mapElements.Animal;
+import project.mapElements.Grass;
+import project.simulation.ISimulationStepObserver;
+import project.simulation.SimulationEngine;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.HPos;
@@ -24,7 +29,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-public class App extends Application implements ISimulationStepObserver{
+public class App extends Application implements ISimulationStepObserver {
 
     private RectangularGrassField map;
     private GridPane grid;
@@ -73,19 +78,6 @@ public class App extends Application implements ISimulationStepObserver{
         engine.addObserver(this);
 //        Thread engineThread = new Thread(engine);
 //        engineThread.start();
-    }
-
-    public static void main(String[] args){
-
-        try {
-            System.out.println("System started");
-
-            launch(args);
-
-            System.out.println("System finished");
-        } catch ( IllegalArgumentException ex) {
-            ex.printStackTrace();
-        }
     }
 
     public static int GRID_WIDTH = 800;

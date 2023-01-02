@@ -1,4 +1,4 @@
-package agh.ics.oop;
+package project.simulation;
 
 /**
  * The interface responsible for managing the moves of the animals.

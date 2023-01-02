@@ -1,4 +1,4 @@
-import agh.ics.oop.Vector2d;
+import project.map.Vector2d;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

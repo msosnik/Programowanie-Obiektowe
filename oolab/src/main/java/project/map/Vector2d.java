@@ -1,4 +1,4 @@
-package agh.ics.oop;
+package project.map;
 
 import java.util.Objects;
 

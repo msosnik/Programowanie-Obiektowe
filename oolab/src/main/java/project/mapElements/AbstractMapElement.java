@@ -1,9 +1,6 @@
-package agh.ics.oop;
+package project.mapElements;
 
-import javafx.scene.image.Image;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import project.map.Vector2d;
 
 public abstract class AbstractMapElement implements IMapElement {
 

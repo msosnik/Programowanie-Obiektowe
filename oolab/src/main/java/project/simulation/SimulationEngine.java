@@ -1,7 +1,11 @@
-package agh.ics.oop;
+package project.simulation;
 
-import agh.ics.oop.gui.ESimulationProperty;
-import agh.ics.oop.gui.SimulationPropertyFile;
+import project.map.Vector2d;
+import project.map.RectangularGrassField;
+import project.mapElements.Animal;
+import project.mapElements.Grass;
+import project.gui.ESimulationProperty;
+import project.gui.SimulationPropertyFile;
 
 import java.util.*;
 

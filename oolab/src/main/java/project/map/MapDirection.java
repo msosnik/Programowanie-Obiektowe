@@ -1,4 +1,4 @@
-package agh.ics.oop;
+package project.map;
 
 public enum MapDirection {
     NORTH(new Vector2d(0, 1), "N"),

@@ -1,4 +1,7 @@
-package agh.ics.oop;
+package project.map;
+
+import project.mapElements.Animal;
+import project.mapElements.Grass;
 
 import java.util.Comparator;
 import java.util.HashMap;

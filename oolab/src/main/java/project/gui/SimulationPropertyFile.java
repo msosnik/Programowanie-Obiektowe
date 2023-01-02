@@ -1,4 +1,4 @@
-package agh.ics.oop.gui;
+package project.gui;
 
 import java.io.File;
 import java.io.FileInputStream;

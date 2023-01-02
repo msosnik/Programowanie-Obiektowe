@@ -1,4 +1,8 @@
-package agh.ics.oop;
+package project.map;
+
+import project.mapElements.Animal;
+import project.mapElements.Grass;
+import project.mapElements.IMapElement;
 
 import java.util.*;
 import java.util.stream.Collectors;

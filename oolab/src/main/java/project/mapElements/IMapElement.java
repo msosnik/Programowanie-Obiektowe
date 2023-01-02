@@ -1,4 +1,6 @@
-package agh.ics.oop;
+package project.mapElements;
+
+import project.map.Vector2d;
 
 public interface IMapElement {
 

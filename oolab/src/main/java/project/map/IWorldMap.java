@@ -1,6 +1,6 @@
-package agh.ics.oop;
+package project.map;
 
-import java.util.List;
+import project.mapElements.Animal;
 
 /**
  * The interface responsible for interacting with the map of the world.

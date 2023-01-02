@@ -1,4 +1,4 @@
-package agh.ics.oop.gui;
+package project.gui;
 
 public enum ESimulationProperty {
 
