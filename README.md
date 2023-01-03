@@ -8,3 +8,14 @@ Projekt 1 - Generator Ewolucyjny
 4. Jak żaden plik nie zostanie podany, to konfiguracje zostaną pobrane z pliku config1.properties
 5. Wyświetlone okienko symulacji ma 2 przyciski, 1 do startu i przerwania symulacji, 2 wykonuje jeden krok odpowiadający jednemu dniu
 6. Wyniki zostają zapinane do pliku nazwanego jak ten z konfiguracjami + "-output.csv" w katalogu oolab
+
+Warianty należy przekazać w pliku jako liczbę całkowitą:
+Mapa:
+  1 - kula ziemska
+  każdy inny int - piekielny portal
+Zachowanie zwierząt:
+  1 - pełna predestynacja
+  każdy inny int - nieco szaleństwa
+Mutacje:
+  1 - pełna losowoć
+  każdy inny int - lekka korekta
