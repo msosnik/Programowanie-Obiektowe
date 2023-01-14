@@ -17,7 +17,7 @@ public class RectangularGrassField extends AbstractWorldMap {
 
     public RectangularGrassField(int width, int height, int grassCount) {
 
-        upperRight = new Vector2d(width-1, height-1);
+        upperRight = new Vector2d(width - 1, height - 1);
 
         Map<Vector2d, Grass> grassMap = new HashMap<>();
         plantGrass(grassCount, grassMap);
@@ -43,6 +43,7 @@ public class RectangularGrassField extends AbstractWorldMap {
         }
         return grassMap;
     }
+
     public Vector2d generateRandomPosition() {
         int x = random.nextInt(0, getWidth());
         int y = random.nextInt(0, getHeight());
@@ -62,7 +63,7 @@ public class RectangularGrassField extends AbstractWorldMap {
         int yRandomNumber = random.nextInt(0, newHeight);
         int y = yRandomNumber < getHeight() ?
                 yRandomNumber :
-                rainForestStartIndex + (yRandomNumber-getHeight()) % sizeOfRainForrest;
+                rainForestStartIndex + (yRandomNumber - getHeight()) % sizeOfRainForrest;
 
         Vector2d position = new Vector2d(x, y);
         return position;
@@ -99,16 +100,16 @@ public class RectangularGrassField extends AbstractWorldMap {
 
     public int getEmptyFieldCount() {
         int allFields = this.getWidth() * this.getHeight();
-        int occupiedFields = mapElements.stream().map(e->e.getPosition()).collect(Collectors.toSet()).size();
-        return allFields-occupiedFields;
+        int occupiedFields = mapElements.stream().map(e -> e.getPosition()).collect(Collectors.toSet()).size();
+        return allFields - occupiedFields;
     }
 
-    public Map.Entry<String, Integer>  getMostPopularGenes() {
+    public Map.Entry<String, Integer> getMostPopularGenes() {
         Map<String, Integer> genomeOccurences = new HashMap<>();
         for (Animal a : getAnimals()) {
             String key = a.getGenome().toString();
-            genomeOccurences.computeIfPresent(key, (k, v)-> v+1);
-            genomeOccurences.computeIfAbsent(key, k-> 1);
+            genomeOccurences.computeIfPresent(key, (k, v) -> v + 1);
+            genomeOccurences.computeIfAbsent(key, k -> 1);
         }
         Map.Entry<String, Integer> result = genomeOccurences.entrySet().stream().max(Comparator.comparingInt(Map.Entry::getValue)).orElse(null);
         return result;

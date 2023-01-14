@@ -1,4 +1,4 @@
-package project.map;
+package project.map; // czemu wektor jest w pakiecie map?
 
 import java.util.Objects;
 
@@ -39,7 +39,7 @@ public class Vector2d {
 //    }
     @Override
     public String toString() {
-        return "(" + this.x +", " + this.y + ")";
+        return "(" + this.x + ", " + this.y + ")";
     }
 
     public boolean precedes(Vector2d other) {
@@ -57,6 +57,7 @@ public class Vector2d {
             return false;
         }
     }
+
     public Vector2d upperRight(Vector2d other) {
         Vector2d supremum = new Vector2d(max(this.x, other.x), max(this.y, other.y));
         return supremum;
@@ -68,14 +69,15 @@ public class Vector2d {
     }
 
     public Vector2d add(Vector2d other) {
-        Vector2d sum = new Vector2d(this.x+ other.x, this.y+ other.y);
+        Vector2d sum = new Vector2d(this.x + other.x, this.y + other.y);
         return sum;
     }
 
     public Vector2d subtract(Vector2d other) {
-        Vector2d result = new Vector2d(this.x- other.x, this.y- other.y);
+        Vector2d result = new Vector2d(this.x - other.x, this.y - other.y);
         return result;
     }
+
     public boolean equals(Object other) {
         if (this == other) {
             return true;

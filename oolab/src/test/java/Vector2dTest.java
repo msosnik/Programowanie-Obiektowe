@@ -31,16 +31,16 @@ public class Vector2dTest {
 
     @Test
     public void testToString() {
-        assertEquals (v00.toString(), "(0, 0)");
-        assertEquals (vzero.toString(), "(0, 0)");
-        assertEquals (v10.toString(), "(1, 0)");
-        assertEquals (v01.toString(),"(0, 1)");
-        assertEquals (v02.toString(), "(0, 2)");
-        assertEquals (vzero.toString(), v00.toString());
+        assertEquals(v00.toString(), "(0, 0)");
+        assertEquals(vzero.toString(), "(0, 0)");
+        assertEquals(v10.toString(), "(1, 0)");
+        assertEquals(v01.toString(), "(0, 1)");
+        assertEquals(v02.toString(), "(0, 2)");
+        assertEquals(vzero.toString(), v00.toString());
 
-        assertTrue (!v00.toString().equals("(0,0)"));
-        assertTrue (!v00.toString().equals("(0 , 0)"));
-        assertTrue (!vzero.toString().equals(v01.toString()));
+        assertTrue(!v00.toString().equals("(0,0)"));
+        assertTrue(!v00.toString().equals("(0 , 0)"));
+        assertTrue(!vzero.toString().equals(v01.toString()));
     }
 
     @Test

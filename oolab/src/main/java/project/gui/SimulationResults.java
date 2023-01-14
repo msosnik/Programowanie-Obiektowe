@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
 public class SimulationResults {
-    public int day;
+    public int day; // public?
     public int animalCount;
     public int grassCount;
     public int emptyFieldCount;
@@ -29,8 +29,9 @@ public class SimulationResults {
         return result;
 
     }
+
     public String getCSVLine() {
-        String result =String.format(
+        String result = String.format(
                 "%d,%d,%d,%d,%d,%.1f,%d,%.1f",
                 day,
                 animalCount,
@@ -52,6 +53,7 @@ public class SimulationResults {
             throw new RuntimeException(e);
         }
     }
+
     public static void writeHeaderToCSV(File outputCSVFile) {
         try (PrintWriter pw = new PrintWriter(new FileOutputStream(outputCSVFile))) {
             pw.println(SimulationResults.getCSVHeaderLine());

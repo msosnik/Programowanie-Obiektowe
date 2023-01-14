@@ -4,7 +4,7 @@ import project.gui.App;
 import javafx.application.Application;
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         try {
             System.out.println("System started");
@@ -12,7 +12,7 @@ public class Main {
             Application.launch(App.class, args);
 
             System.out.println("System finished");
-        } catch ( IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ex) {
             System.err.println(ex);
 
         }

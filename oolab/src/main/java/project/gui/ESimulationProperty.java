@@ -1,8 +1,8 @@
 package project.gui;
 
-public enum ESimulationProperty {
+public enum ESimulationProperty { // czemu E?
 
-    wysokoscMapy,
+    wysokoscMapy, // jak enum to wielkimi literami
     szerokoscMapy,
     wariantMapy,
     startowaLiczbaRoslin,

@@ -181,10 +181,10 @@ public class App extends Application implements ISimulationStepObserver {
         controlPanel.add(new Label("Color Legend"), 0, rowIndex);
         controlPanel.getRowConstraints().add(new RowConstraints(rowHeight));
 
-        for (int i =1; i<6; i++) {
-            controlPanel.add(new Label(i<5 ? "energy = "+i : "energy >= " +i), 0, rowIndex+i);
+        for (int i = 1; i < 6; i++) {
+            controlPanel.add(new Label(i < 5 ? "energy = " + i : "energy >= " + i), 0, rowIndex + i);
             controlPanel.getRowConstraints().add(new RowConstraints(rowHeight));
-            controlPanel.add(new Circle(rowHeight/2, getColor(i)), 1, rowIndex+i);
+            controlPanel.add(new Circle(rowHeight / 2, getColor(i)), 1, rowIndex + i);
         }
 
         controlPanel.setMinWidth(400);
@@ -212,7 +212,7 @@ public class App extends Application implements ISimulationStepObserver {
         }
     }
 
-//    private static void drawMap(RectangularGrassField map, int width, int height, GridPane grid) {
+    //    private static void drawMap(RectangularGrassField map, int width, int height, GridPane grid) {
     private static void drawMap(List<Animal> animalList, List<Grass> grassList, int width, int height, GridPane grid) {
         grid.getChildren().clear();
 
@@ -223,8 +223,8 @@ public class App extends Application implements ISimulationStepObserver {
 //        System.out.println("gridColumnCount:" + gridColumnCount);
 //        System.out.println("gridRowCount: " + gridRowCount);
 
-        int columnWidth = GRID_WIDTH/gridColumnCount; //related to scene size
-        int rowHeight = GRID_HEIGHT/gridRowCount; //related to scene size;
+        int columnWidth = GRID_WIDTH / gridColumnCount; //related to scene size
+        int rowHeight = GRID_HEIGHT / gridRowCount; //related to scene size;
 //        System.out.println("field size: " + columnWidth + ", " + rowHeight);
 
         for (int y = 0; y < gridRowCount; y++) {
@@ -236,18 +236,18 @@ public class App extends Application implements ISimulationStepObserver {
 
         //X-> col. Y-> row.
         //x==y==0 => x"y/x"
-        grid.add(new Label("y/x"),0,0);
+        grid.add(new Label("y/x"), 0, 0);
 
         //x==0,y!=0 => x coords
-        for (int x = 1; x <gridColumnCount; x++) {
-            Integer coord = x-1;
+        for (int x = 1; x < gridColumnCount; x++) {
+            Integer coord = x - 1;
             Label label = new Label(gridRowCount <= 40 ? coord.toString() : ".");
 //            label.setMinSize(columnWidth, rowHeight);
-            grid.add(label, x,0);
+            grid.add(label, x, 0);
         }
         //y==0, x!= 0 => y coords
         for (int y = 1; y < gridRowCount; y++) {
-            Integer coord = height-y;
+            Integer coord = height - y;
             Label label = new Label(gridRowCount <= 40 ? coord.toString() : ".");
 //            label.setMinSize(columnWidth, rowHeight);
             grid.add(label, 0, y);
@@ -274,7 +274,7 @@ public class App extends Application implements ISimulationStepObserver {
             Vector2d mapPosition = mapElement.getPosition();
             int gridX = mapPosition.x + 1;
             int gridY = height - mapPosition.y;
-            int radius = Math.min(columnWidth, rowHeight)/2;
+            int radius = Math.min(columnWidth, rowHeight) / 2;
             int energy = mapElement.getEnergy();
 //            Paint color = Color.rgb(100, 60, 0, 1);
             Paint color = getColor(energy);
@@ -319,17 +319,17 @@ public class App extends Application implements ISimulationStepObserver {
     }
 
     private void updateControlPane(SimulationResults simulationResults) {
-        simulationDay.setText(""+simulationResults.day);
-        animalCount.setText(""+simulationResults.animalCount);
-        grassCount.setText(""+simulationResults.grassCount);
-        emptyFieldCount.setText(""+simulationResults.emptyFieldCount);
+        simulationDay.setText("" + simulationResults.day);
+        animalCount.setText("" + simulationResults.animalCount);
+        grassCount.setText("" + simulationResults.grassCount);
+        emptyFieldCount.setText("" + simulationResults.emptyFieldCount);
         averageLifeLength.setText(simulationResults.averageLifeLength > 0 ?
-                String.format( "%.1f", simulationResults.averageLifeLength) : "-");
-        totalDeadAnimals.setText(""+simulationResults.totalDeadAnimals);
+                String.format("%.1f", simulationResults.averageLifeLength) : "-");
+        totalDeadAnimals.setText("" + simulationResults.totalDeadAnimals);
         double avgEnergy = simulationResults.averageEnergy;
-        averageEnergy.setText(avgEnergy>0 ? String.format("%.1f", avgEnergy) : "-");
+        averageEnergy.setText(avgEnergy > 0 ? String.format("%.1f", avgEnergy) : "-");
         mostPopularGenotype.setText(simulationResults.mostPopularGenomeCount > 0 ?
-                simulationResults.mostPopularGenomeCount+" = " + simulationResults.mostPopularGenome : "-");
+                simulationResults.mostPopularGenomeCount + " = " + simulationResults.mostPopularGenome : "-");
     }
 
     public SimulationResults createSimulationResult() {
@@ -342,7 +342,7 @@ public class App extends Application implements ISimulationStepObserver {
 
         simulationResults.averageLifeLength = engine.averageLifeLength().orElse(-1);
         simulationResults.totalDeadAnimals = engine.totalDeadAnimal();
-        simulationResults.averageEnergy = map.getAnimals().stream().mapToDouble(a->a.getEnergy()).average().orElse(-1);
+        simulationResults.averageEnergy = map.getAnimals().stream().mapToDouble(a -> a.getEnergy()).average().orElse(-1);
         Map.Entry<String, Integer> mostPopularGene = map.getMostPopularGenes();
         if (mostPopularGene != null) {
             simulationResults.mostPopularGenomeCount = mostPopularGene.getValue();
@@ -353,7 +353,6 @@ public class App extends Application implements ISimulationStepObserver {
         }
         return simulationResults;
     }
-
 
 
 }

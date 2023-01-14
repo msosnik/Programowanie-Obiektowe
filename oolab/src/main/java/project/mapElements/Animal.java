@@ -19,12 +19,12 @@ public class Animal extends AbstractMapElement {
     private IWorldMap map;
     private MapDirection orientation;
 
-    final private List<Integer> genome;
+    final private List<Integer> genome; // przydałaby się osobna klasa na genom
     private int currentGeneIndex;
 
     private final int birthDay;
     private int energy;
-    private int childrenCount =0;
+    private int childrenCount = 0;
 
     public int getChildrenCount() {
         return childrenCount;
@@ -38,19 +38,19 @@ public class Animal extends AbstractMapElement {
         return energy;
     }
 
-    public void setEnergy(int energy) {
+    public void setEnergy(int energy) { // czy upublicznienie tej metody jest najlepszym rozwiązaniem?
         this.energy = energy;
     }
 
     public List<Integer> getGenome() {
-        return genome;
+        return genome; // dehermetyzacja
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition, int genomeLength, int startEnergy) {
         this(map, initialPosition, generateRandomGenome(genomeLength), startEnergy, 0);
     }
 
-    public Animal(IWorldMap map, Vector2d initialPosition, List<Integer>genome, int startEnergy, int currentDy) {
+    public Animal(IWorldMap map, Vector2d initialPosition, List<Integer> genome, int startEnergy, int currentDy) {
         this.map = map;
         this.position = initialPosition;
         this.map.place(this);
@@ -64,7 +64,7 @@ public class Animal extends AbstractMapElement {
 
     private static List<Integer> generateRandomGenome(int genomeLength) {
         List<Integer> result = new ArrayList<>();
-        for (int i =0; i<genomeLength; i++) {
+        for (int i = 0; i < genomeLength; i++) {
             int gene = random.nextInt(0, 8);
             result.add(gene);
         }
@@ -82,13 +82,13 @@ public class Animal extends AbstractMapElement {
         // rotate
         this.orientation = this.orientation.rotate(genome.get(currentGeneIndex));
 
-        if (simulationPropertyFile.getIntValue(ESimulationProperty.wariantZachowaniaZwierzakow) == 1) {
+        if (simulationPropertyFile.getIntValue(ESimulationProperty.wariantZachowaniaZwierzakow) == 1) { // if nie jest najlepszym rozwiązaniem; polglish
             //pełna predestynacja
             currentGeneIndex = (currentGeneIndex + 1) % this.genome.size();
 
         } else {
             //trochę szaleństwa
-            currentGeneIndex = (currentGeneIndex + random.nextInt(2 ,this.genome.size())) % this.genome.size();
+            currentGeneIndex = (currentGeneIndex + random.nextInt(2, this.genome.size())) % this.genome.size();
 
         }
 
@@ -120,6 +120,7 @@ public class Animal extends AbstractMapElement {
         }
         this.energy--;
     }
+
     public int getBirthDay() {
         return birthDay;
     }

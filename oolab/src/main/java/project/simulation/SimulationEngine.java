@@ -9,7 +9,7 @@ import project.gui.SimulationPropertyFile;
 
 import java.util.*;
 
-public class SimulationEngine implements IEngine, Runnable{
+public class SimulationEngine implements IEngine, Runnable {
 
     private static Random random = new Random();
     private final RectangularGrassField map;
@@ -51,7 +51,7 @@ public class SimulationEngine implements IEngine, Runnable{
         int genomeLength = this.simulationPropertyFile.getIntValue(ESimulationProperty.dlugoscGenomuZwierzakow);
         int animalCount = this.simulationPropertyFile.getIntValue(ESimulationProperty.startowaLiczbaZwierzakow);
         int startEnergy = this.simulationPropertyFile.getIntValue(ESimulationProperty.startowaEnergiaZwierzakow);
-        for (int i=0; i<animalCount; i++) {
+        for (int i = 0; i < animalCount; i++) {
             Vector2d position = map.generateRandomPosition();
             Animal animal = new Animal(map, position, genomeLength, startEnergy);
         }
@@ -73,7 +73,7 @@ public class SimulationEngine implements IEngine, Runnable{
             }
 
             for (Animal a : animalsToDie) {
-                deadAnimalsAgeList.add(currentStep-a.getBirthDay());
+                deadAnimalsAgeList.add(currentStep - a.getBirthDay());
                 animalList.remove(a);
                 map.getMapElements().remove(a);
             }
@@ -83,7 +83,7 @@ public class SimulationEngine implements IEngine, Runnable{
 
             // Animals on their positions
             Map<Vector2d, List<Animal>> animalMap = new HashMap<>();
-            for (Animal animal: animalList) {
+            for (Animal animal : animalList) {
                 animalMap.computeIfAbsent(animal.getPosition(), k -> new ArrayList<>())
                         .add(animal);
             }
@@ -138,17 +138,16 @@ public class SimulationEngine implements IEngine, Runnable{
 
 //            System.out.println("Move direction: " + direction.toString());
 //            System.out.println(map);
-        } while (!paused);
+        } while (!paused); // chyba inaczej rozumiemy słowo paused
 
-        }
-
+    }
 
 
     private void animalReproduction(Vector2d position, Animal winner, Animal secondParent) {
         int genomeLength = this.simulationPropertyFile.getIntValue(ESimulationProperty.dlugoscGenomuZwierzakow);
         List<Integer> childGenome = new ArrayList<>();
         //też liczba genów jaka odziedziczy po silniejszym rodzicu
-        int cutIndex = genomeLength * winner.getEnergy()/ (winner.getEnergy()+secondParent.getEnergy());
+        int cutIndex = genomeLength * winner.getEnergy() / (winner.getEnergy() + secondParent.getEnergy());
 
         //losowanie strony silniejszego osobnika
         int side = random.nextInt(2);
@@ -159,7 +158,7 @@ public class SimulationEngine implements IEngine, Runnable{
         }
         //prawa -> bierzemy pierwsze geny od drugiego rodzica
         else {
-            cutIndex = genomeLength-cutIndex;
+            cutIndex = genomeLength - cutIndex;
 
             childGenome.addAll(secondParent.getGenome().subList(0, cutIndex));
             childGenome.addAll(winner.getGenome().subList(cutIndex, genomeLength));
@@ -172,22 +171,22 @@ public class SimulationEngine implements IEngine, Runnable{
 //        System.out.println("R: " + childGenome);
 //        System.out.println("L: " + secondParent.getGenome());
 
-        Animal childAnimal = new Animal(this.map, position, childGenome, 2*this.reproductionEnergy, currentStep);
+        Animal childAnimal = new Animal(this.map, position, childGenome, 2 * this.reproductionEnergy, currentStep);
         winner.setEnergy(winner.getEnergy() - this.reproductionEnergy);
         secondParent.setEnergy(secondParent.getEnergy() - this.reproductionEnergy);
-        winner.setChildrenCount(winner.getChildrenCount()+1);
-        secondParent.setChildrenCount(secondParent.getChildrenCount()+1);
+        winner.setChildrenCount(winner.getChildrenCount() + 1);
+        secondParent.setChildrenCount(secondParent.getChildrenCount() + 1);
     }
 
-    private void geneticMutation(int genomeLength, List<Integer> childGenome) {
+    private void geneticMutation(int genomeLength, List<Integer> childGenome) { // czy engine jest odpowiednim miejscem na to?
         //mutacje genów
         //liczba mutacji
-        int mutations = random.nextInt(this.minMutations, this.maxMutations+1);
+        int mutations = random.nextInt(this.minMutations, this.maxMutations + 1);
         //wybrane geny które się zmienią
         Set<Integer> mutationIndexSet = new HashSet<>();
 
 
-        while (mutationIndexSet.size()<mutations) {
+        while (mutationIndexSet.size() < mutations) {
             int newIndex = random.nextInt(0, genomeLength);
             mutationIndexSet.add(newIndex);
         }
@@ -204,7 +203,7 @@ public class SimulationEngine implements IEngine, Runnable{
 //        }
 
         //wariant1: Pełna losowość
-        if (this.mutationVariant==1) {
+        if (this.mutationVariant == 1) {
             for (int index : mutationIndexSet) {
                 int newGene = (childGenome.get(index) + random.nextInt(1, 8)) % 8;
                 childGenome.set(index, newGene);
@@ -219,7 +218,7 @@ public class SimulationEngine implements IEngine, Runnable{
         }
     }
 
-    public void addObserver(ISimulationStepObserver observer){
+    public void addObserver(ISimulationStepObserver observer) {
         observerList.add(observer);
     }
 
@@ -227,7 +226,7 @@ public class SimulationEngine implements IEngine, Runnable{
         observerList.remove(observer);
     }
 
-    private void notifyObservers(int currentStep){
+    private void notifyObservers(int currentStep) {
         for (ISimulationStepObserver o : observerList) {
             o.stepCompleted(currentStep);
         }
@@ -240,9 +239,11 @@ public class SimulationEngine implements IEngine, Runnable{
     public void setPaused(boolean b) {
         paused = b;
     }
+
     public int getCurrentStep() {
         return currentStep;
     }
+
     public OptionalDouble averageLifeLength() {
         return deadAnimalsAgeList.stream().mapToDouble(e -> e).average();
 //        double result = 0;
@@ -252,7 +253,8 @@ public class SimulationEngine implements IEngine, Runnable{
 //        result = result/deadAnimalsAgeList.size();
 //        return result;
     }
-    public int totalDeadAnimal(){
+
+    public int totalDeadAnimal() { // get...
         return deadAnimalsAgeList.size();
     }
 

@@ -38,6 +38,7 @@ public interface IWorldMap {
     Vector2d generateRandomPosition();
 
     int getHeight();
+
     int getWidth();
 }
 
